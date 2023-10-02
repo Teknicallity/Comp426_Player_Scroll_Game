@@ -14,6 +14,21 @@ type scrollGame struct {
 	//score           int
 	background      *ebiten.Image
 	backgroundXView int
+	wkey            bool
+	skey            bool
+	bullets         []bullet
+}
+
+type bullet struct {
+	picture *ebiten.Image
+	xloc    int
+	yloc    int
+}
+
+type enemy struct {
+	picture *ebiten.Image
+	xloc    int
+	yloc    int
 }
 
 func (game *scrollGame) Update() error {
@@ -22,13 +37,11 @@ func (game *scrollGame) Update() error {
 		//play sound
 	}
 	//move existing bullet objects
-	if inpututil.IsKeyJustPressed(ebiten.KeyW) {
-		//decrease player yloc
-		game.yloc -= 10
+	if ebiten.IsKeyPressed(ebiten.KeyW) {
+		game.yloc -= 8
 	}
-	if inpututil.IsKeyJustPressed(ebiten.KeyS) {
-		//increase player yloc
-		game.yloc += 10
+	if ebiten.IsKeyPressed(ebiten.KeyS) {
+		game.yloc += 8
 	}
 
 	backgroundWidth := game.background.Bounds().Dx() //get x value of image
@@ -60,6 +73,14 @@ func (game *scrollGame) Layout(outsideWidth, outsideHeight int) (screenWidth, sc
 	return outsideWidth, outsideHeight
 }
 
+func newBullet(MaxWidth int, playerLoc int, bulletPict *ebiten.Image) bullet {
+	return bullet{
+		picture: bulletPict,
+		xloc:    80,
+		yloc:    playerLoc,
+	}
+}
+
 func main() {
 	ebiten.SetWindowSize(1000, 1000)
 	ebiten.SetWindowTitle("Scroll Project")
@@ -73,11 +94,18 @@ func main() {
 	if err != nil {
 		fmt.Println("Unable to load image:", err)
 	}
+	//bulletPict, _, err := ebitenutil.NewImageFromFile("bullet.png")
+	//if err != nil {
+	//	fmt.Println("Unable to load bullet image:", err)
+	//}
+	//initializeBullet(bulletPict)
+	//AllBullets := make([]bullet, 0, 15)
 	ourGame := scrollGame{
 		player:     playerPict,
 		xloc:       500,
 		yloc:       500,
-		background: backgroundPict}
+		background: backgroundPict,
+	}
 
 	err = ebiten.RunGame(&ourGame)
 	if err != nil {
