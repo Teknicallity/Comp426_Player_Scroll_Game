@@ -66,9 +66,17 @@ func (game *scrollGame) Update() error {
 	}
 
 	//bullet logic
+	//probably inefficient, makes new slice every time.
+	//investigate double linked list, delete one element but link the previous and next locations together
+	updatedBullets := make([]bullet, 0, len(allBullets))
 	for i := range allBullets {
 		allBullets[i].xloc += 10
+		if allBullets[i].xloc <= 1040 {
+			updatedBullets = append(updatedBullets, allBullets[i])
+		}
 	}
+	allBullets = updatedBullets
+	fmt.Printf("number of bullets: %d\n", len(allBullets))
 
 	//background moving
 	backgroundWidth := game.background.Bounds().Dx() //get x value of image
