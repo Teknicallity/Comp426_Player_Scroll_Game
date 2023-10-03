@@ -49,6 +49,7 @@ func (game *scrollGame) Update() error {
 		//create bullet object
 		//play sound
 		allBullets = append(allBullets, newBullet(game.yloc, game.bulletPic))
+
 	}
 	//move existing bullet objects
 	if ebiten.IsKeyPressed(ebiten.KeyW) {
@@ -65,8 +66,8 @@ func (game *scrollGame) Update() error {
 	}
 
 	//bullet logic
-	for _, bulletElement := range allBullets {
-		bulletElement.xloc += 10
+	for i := range allBullets {
+		allBullets[i].xloc += 10
 	}
 
 	//background moving
