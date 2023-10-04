@@ -2,9 +2,13 @@ module ProjectOneScroll
 
 go 1.21
 
-require github.com/hajimehoshi/ebiten/v2 v2.6.0
+require (
+	github.com/co0p/tankism v0.0.0-20230903205805-1ebc2e88a661
+	github.com/hajimehoshi/ebiten/v2 v2.6.1
+)
 
 require (
+	github.com/ebitengine/oto/v3 v3.1.0 // indirect
 	github.com/ebitengine/purego v0.5.0 // indirect
 	github.com/jezek/xgb v1.1.0 // indirect
 	golang.org/x/exp/shiny v0.0.0-20230817173708-d852ddb80c63 // indirect
