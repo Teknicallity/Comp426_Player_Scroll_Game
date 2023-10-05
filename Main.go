@@ -87,9 +87,10 @@ func (game *scrollGame) Update() error {
 	for i := range allBullets {
 		allBullets[i].xloc += 10
 		for j := range allEnemies {
-			checkSimpleCollisions(allEnemies[j], allBullets[i], game)
+			checkSimpleCollisions(&allEnemies[j], &allBullets[i], game)
+			break
 		}
-		if allBullets[i].xloc <= 1040 {
+		if allBullets[i].xloc <= 1040 { //if bullet location is within the bounds
 			updatedBullets = append(updatedBullets, allBullets[i])
 		}
 	}
@@ -100,10 +101,12 @@ func (game *scrollGame) Update() error {
 	updatedEnemies := make([]enemy, 0, len(allEnemies))
 	for i := range allEnemies {
 		allEnemies[i].xloc -= 5
-		if allEnemies[i].xloc > -80 {
-			updatedEnemies = append(updatedEnemies, allEnemies[i])
-		} else {
-			game.score--
+		if allEnemies[i].yloc > 0 {
+			if allEnemies[i].xloc > -80 { //if x is within the bounds
+				updatedEnemies = append(updatedEnemies, allEnemies[i])
+			} else {
+				game.score--
+			}
 		}
 	}
 	allEnemies = updatedEnemies
@@ -188,7 +191,7 @@ func LoadWav(name string, context *audio.Context) *audio.Player {
 	return soundPlay
 }
 
-func checkSimpleCollisions(baddie enemy, shot bullet, game *scrollGame) {
+func checkSimpleCollisions(baddie *enemy, shot *bullet, game *scrollGame) {
 	shotBounds := collision.BoundingBox{
 		X:      float64(shot.xloc),
 		Y:      float64(shot.yloc),
@@ -202,13 +205,14 @@ func checkSimpleCollisions(baddie enemy, shot bullet, game *scrollGame) {
 		Height: float64(baddie.picture.Bounds().Dy()),
 	}
 	if collision.AABBCollision(shotBounds, baddieBounds) {
+		//fmt.Printf("checking\n")
 		game.score += 2
 		err := game.soundPlayerDeath.Rewind()
 		if err != nil {
 			return
 		}
 		game.soundPlayerDeath.Play()
-		baddie.xloc = -80
+		baddie.yloc = -80
 	}
 }
 
